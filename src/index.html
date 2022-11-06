@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>
+                <div>
+                    <span>Employees</span>
+                </div>
+            </th>
+            <th colspan="32">
+                <div>
+                    <button class="navButton" type="button" onclick="selectLastMonth()">&larr;</button>
+                    <span>🗓</span>
+                    <button class="navButton" type="button" onclick="selectNextMonth()">&rarr;</button>
+                    <span id="currentDate"></span>
+                </div>
+            </th>
+        </tr>
+        </thead>
+        <thead>
+        <tr id="monthHeader">
+        </tr>
+        </thead>
+        <tbody id="userBody">
+        <tr>
+            <td>Marcel Herhold</td>
+            <!--            <td class="vacation"></td>-->
+            <!--            <td class="holiday"></td>-->
+            <!--            <td class=""></td>-->
+            <!--            <td class=""></td>-->
+            <!--            <td class=""></td>-->
+            <!--            <td class="saturday"></td>-->
+            <!--            <td class="sunday"></td>-->
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+<script src="index.js"></script>
+
+</html>

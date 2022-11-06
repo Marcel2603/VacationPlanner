@@ -1,0 +1,27 @@
+* {
+    margin: 0;
+}
+
+table {
+    width: 100%;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+input {
+    border: 0;
+}
+.vacation {
+    background: lightskyblue;
+}
+.saturday {
+    background: lightgray;
+}
+.sunday {
+    background: darkgrey;
+}
+
+.day:hover {
+    background: lightblue;
+}
