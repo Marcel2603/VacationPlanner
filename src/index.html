@@ -9,24 +9,13 @@
 
 <body>
 <div>
+    <div>
+        <button class="navButton" type="button" onclick="selectLastMonth()">&larr;</button>
+        <span>🗓</span>
+        <button class="navButton" type="button" onclick="selectNextMonth()">&rarr;</button>
+        <span id="currentDate"></span>
+    </div>
     <table>
-        <thead>
-        <tr>
-            <th>
-                <div>
-                    <span>Employees</span>
-                </div>
-            </th>
-            <th colspan="32">
-                <div>
-                    <button class="navButton" type="button" onclick="selectLastMonth()">&larr;</button>
-                    <span>🗓</span>
-                    <button class="navButton" type="button" onclick="selectNextMonth()">&rarr;</button>
-                    <span id="currentDate"></span>
-                </div>
-            </th>
-        </tr>
-        </thead>
         <thead>
         <tr id="monthHeader">
         </tr>

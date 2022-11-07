@@ -25,3 +25,7 @@ input {
 .day:hover {
     background: lightblue;
 }
+
+.highlighted {
+    background: lightblue;
+}

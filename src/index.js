@@ -1,23 +1,30 @@
 let currentDate = new Date();
 let users = new Map([
-	[1, "Marcel Herhold"],
-	[2, "Foo"],
-	[3, "Bar"],
-	[4, "FooBar"],
-	[5, "BarFoo"]
+	[1, {name: "Marcel Herhold", func: "Meister", area: "TB", totalVacation: 30}],
+	[2, {name: "Foo", func: "Meister", area: "TB", totalVacation: 30}],
+	[3, {name: "Bar", func: "Meister", area: "TB", totalVacation: 30}],
+	[4, {name: "FooBar", func: "Meister", area: "TB", totalVacation: 30}],
+	[5, {name: "BarFoo", func: "Meister", area: "TB", totalVacation: 30}],
 ]);
 let vacations = [
-	{userId: 1, start: new Date(2022, 10, 7), end: new Date(2022, 10, 10)},
-	{userId: 1, start: new Date(2022, 10, 7), end: new Date(2022, 10, 10)},
-	{userId: 5, start: new Date(2022, 9, 7), end: new Date(2022, 10, 10)},
-	{userId: 4, start: new Date(2022, 10, 7), end: new Date(2022, 10, 10)},
-	{userId: 2, start: new Date(2022, 10, 7), end: new Date(2022, 10, 10)},
-	{userId: 1, start: new Date(2022, 11, 7), end: new Date(2022, 11, 10)},
-	{userId: 3, start: new Date(2022, 10, 14), end: new Date(2022, 10, 18)},
+	// {userId: 1, start: new Date(2022, 10, 7), end: new Date(2022, 10, 10)},
+	// {userId: 1, start: new Date(2022, 10, 7), end: new Date(2022, 10, 10)},
+	// {userId: 5, start: new Date(2022, 9, 7), end: new Date(2022, 10, 10)},
+	// {userId: 4, start: new Date(2022, 10, 7), end: new Date(2022, 10, 10)},
+	// {userId: 2, start: new Date(2022, 10, 7), end: new Date(2022, 10, 10)},
+	// {userId: 1, start: new Date(2022, 11, 7), end: new Date(2022, 11, 10)},
+	// {userId: 3, start: new Date(2022, 10, 14), end: new Date(2022, 10, 18)},
 ];
+let isMouseDown = false;
+let lastIndx = 0;
+
 window.onload = () => {
 	render();
 };
+
+window.onmouseup = () => {
+	isMouseDown = false
+}
 
 function render() {
 	_renderCurrentDate();
@@ -37,9 +44,12 @@ function selectLastMonth() {
 
 function renderMonthHeader() {
 	document.getElementById("monthHeader").replaceChildren();
-	const th = document.createElement('th');
-	th.innerHTML = _getSearchHeader();
-	document.getElementById("monthHeader").appendChild(th);
+	let header = document.getElementById("monthHeader")
+	_getStaticHeaders().map(html => {
+		const th = document.createElement('th');
+		th.innerHTML = html;
+		return th;
+	}).forEach(th => header.appendChild(th));
 	const days = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
 	const dayDate = new Date(currentDate);
 	for (let date = 1; date <= days; date++) {
@@ -48,12 +58,8 @@ function renderMonthHeader() {
 	}
 }
 
-function _getSearchHeader() {
-	return `<div>
-                    <label>
-                        <input placeholder="Search for Employee">
-                    </label>
-                </div>`;
+function _getStaticHeaders() {
+	return [`<th>Bereich</th>`, `<th>Funkt.</th>`, `<th>Name</th>`, `<th>Jahresurlaub</th>`];
 }
 
 function _renderCurrentDate() {
@@ -95,13 +101,32 @@ function getClassNameForDay(dayDate) {
 	}
 }
 
-function setVacation(element) {
-	element.classList.contains("vacation") ? element.classList.remove("vacation") : element.classList.add("vacation");
+function handleDaySelection(td, ind, arr) {
+	td.onmousedown = () => {
+		isMouseDown = true;
+		td.classList.add("highlighted");
+		lastIndx = ind
+		return false;
+	};
+	td.onmouseover = () => {
+		if (isMouseDown) {
+			if (td.classList.contains("highlighted")) {
+				arr[lastIndx].classList.remove("highlighted")
+				lastIndx = ind
+			} else  {
+				td.classList.add("highlighted");
+				lastIndx = ind
+			}
+		}
+	};
+	td.onmouseup = () => {
+		isMouseDown = false;
+	};
 }
 
-function renderUser(username, id) {
+function renderUser(user, id) {
 	let tr = document.createElement("tr");
-	let days = [`<td>${username}</td>`];
+	let days = [`<td>${user.area}</td>`, `<td>${user.func}</td>`, `<td>${user.name}</td>`, `<td>${user.totalVacation}</td>`];
 	const dayDate = new Date(currentDate.setHours(0, 0, 0, 0));
 	const userVac = vacations.filter(vac => vac.userId === id);
 	for (let date = 1; date <= new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(); date++) {
@@ -109,10 +134,11 @@ function renderUser(username, id) {
 		const hasVac = userVac.filter(vac => {
 			return vac.start.setHours(0, 0, 0, 0) <= dayDate && vac.end.setHours(0, 0, 0, 0) >= dayDate;
 		}).length > 0;
-		console.log(dayDate, hasVac);
 		let classNames = getClassNameForDay(dayDate);
-		days.push(`<td onclick="setVacation(this)" class="${hasVac ? classNames + " vacation" : classNames}"></td>`);
+		days.push(`<td class="${hasVac ? classNames + " vacation" : classNames} day"></td>`);
 	}
 	tr.innerHTML = days.join(`\n`);
-	document.getElementById("userBody").appendChild(tr);
+	let userBody = document.getElementById("userBody");
+	userBody.appendChild(tr);
+	userBody.querySelectorAll(".day").forEach((td, ind, arr) => handleDaySelection(td, ind, arr))
 }
